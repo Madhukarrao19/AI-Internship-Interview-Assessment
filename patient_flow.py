@@ -37,12 +37,16 @@ y_pred = model.predict(X_test)
 mae = mean_absolute_error(y_test, y_pred)
 print(f"Mean Absolute Error: {mae:.2f} minutes")
 
-# Predict delay for future appointments
+# Predict wait time
 def predict_wait_time(doctor_id, scheduled_time):
     scheduled_time = datetime.strptime(scheduled_time, "%Y-%m-%d %H:%M:%S")
     hour = scheduled_time.hour
     day_of_week = scheduled_time.weekday()
-    return model.predict(np.array([[doctor_id, hour, day_of_week]]))[0]  # Predicted delay in minutes
+    
+    # Convert input to a DataFrame with column names
+    input_data = pd.DataFrame([[doctor_id, hour, day_of_week]], columns=['doctor_id', 'hour', 'day_of_week'])
+    
+    return model.predict(input_data)[0]  # Predicted delay in minutes
 
 # Example usage
 predicted_delay = predict_wait_time(doctor_id=5, scheduled_time="2024-03-30 15:45:00")
